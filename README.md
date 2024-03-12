@@ -1,23 +1,75 @@
 # KornCrypt
 
-KornCrypt is a simple command line encryption and decryption tool
+KornCrypt is a simple command line encryption and decryption tool using the XChaCha20-Poly1305 algorithm.
 
-## Examples
+## Usage
 
-#### Encrypting text
-
-```
-korncrypt encrypt -k <keyfile> <plaintext>
-```
-
-#### Decrypting text
+### Encrypting files
 
 ```
-korncrypt decrypt -k <keyfile> <ciphertext>
+korncrypt encrypt [FLAGS] -k <keyfile> <path_to_file>
 ```
 
-#### Generating key file
+With the flag `-r` the original file will be removed after encryption.
+
+#### Example
+
+```
+korncrypt encrypt -k key file.txt
+```
+
+This will encrypt the file `file.txt` using the key in the file `key` and create a new file `file.txt.kc` with the encrypted content.
+
+### Decrypting files
+
+```
+korncrypt decrypt [FLAGS] -k <keyfile> <path_to_file>
+```
+
+With the flag `-r` the original file will be removed after decryption.
+
+#### Example
+
+```
+korncrypt decrypt -k key file.txt.kc
+```
+
+This will decrypt the file `file.txt.kc` using the key in the file `key` and create a new file `file.txt` with the decrypted content.
+
+### Encrypting text
+
+```
+korncrypt encrypt-text -k <keyfile> <text>
+```
+
+#### Example
+
+```
+korncrypt encrypt-text -k key "Hello, World!"
+```
+
+This will encrypt the text `Hello, World!` using the key in the file `key` and print the encrypted text to the console.
+
+### Decrypting text
+
+```
+korncrypt decrypt-text -k <keyfile> <text>
+```
+
+#### Example
+
+```
+korncrypt decrypt-text -k key "encrypted text"
+```
+
+This will decrypt the text `encrypted text` using the key in the file `key` and print the decrypted text to the console.
+
+### Generating key file
 
 ```
 korncrypt generate-key <path>
 ```
+
+## Be Aware!
+
+This tool is not meant to be used for secure encryption. It is a simple tool to encrypt and decrypt files using a key for educational purposes. The key file should be kept secret and never shared with anyone. Use this tool at your own risk.
