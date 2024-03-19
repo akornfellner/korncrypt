@@ -189,7 +189,7 @@ pub fn derive_key_from_password(password: &str) -> xchacha20poly1305_ietf::Key {
 
     let mut key = [0u8; xchacha20poly1305_ietf::KEYBYTES];
 
-    let key = pwhash::derive_key(
+    pwhash::derive_key(
         &mut key,
         passwd,
         &salt,
@@ -198,5 +198,5 @@ pub fn derive_key_from_password(password: &str) -> xchacha20poly1305_ietf::Key {
     )
     .unwrap();
 
-    xchacha20poly1305_ietf::Key::from_slice(key).unwrap()
+    xchacha20poly1305_ietf::Key::from_slice(&key).unwrap()
 }
