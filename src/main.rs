@@ -19,9 +19,9 @@ enum Opt {
         /// the password (will not be used if a key file is provided)
         #[structopt(short, long)]
         password: Option<String>,
-        /// remove the original file
+        /// delete the original file
         #[structopt(short, long)]
-        remove: bool,
+        delete: bool,
         file: String,
     },
     /// Decrypts a file
@@ -32,9 +32,9 @@ enum Opt {
         /// the password (will not be used if a key file is provided)
         #[structopt(short, long)]
         password: Option<String>,
-        /// remove the original file
+        /// delete the original file
         #[structopt(short, long)]
-        remove: bool,
+        delete: bool,
         file: String,
     },
     /// Encrypts a message
@@ -69,7 +69,7 @@ fn main() {
             key,
             password,
             file,
-            remove,
+            delete,
         } => {
             let key = match key {
                 Some(key) => encryption::read_key(&key).unwrap(),
@@ -105,7 +105,7 @@ fn main() {
                 return;
             }
 
-            if remove && std::fs::remove_file(&file).is_err() {
+            if delete && std::fs::remove_file(&file).is_err() {
                 eprintln!("Failed to remove original file");
             }
         }
@@ -113,7 +113,7 @@ fn main() {
             key,
             password,
             file,
-            remove,
+            delete,
         } => {
             let key = match key {
                 Some(key) => encryption::read_key(&key).unwrap(),
@@ -149,7 +149,7 @@ fn main() {
                 return;
             }
 
-            if remove && std::fs::remove_file(&file).is_err() {
+            if delete && std::fs::remove_file(&file).is_err() {
                 eprintln!("Failed to remove original file");
             }
         }
