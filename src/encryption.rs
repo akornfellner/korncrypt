@@ -19,82 +19,6 @@ impl std::fmt::Display for EncryptionError {
 impl std::error::Error for EncryptionError {}
 
 pub fn encrypt(
-    message: &str,
-    key: &xchacha20poly1305_ietf::Key,
-) -> Result<String, EncryptionError> {
-    // Initialize sodiumoxide
-    if sodiumoxide::init().is_err() {
-        return Err(EncryptionError {
-            message: "Failed to initialize sodiumoxide".to_string(),
-        });
-    }
-
-    let nonce = xchacha20poly1305_ietf::gen_nonce();
-
-    // Your message to encrypt
-    let message = message.as_bytes();
-
-    // Encrypt the message
-    let ciphertext = xchacha20poly1305_ietf::seal(message, None, &nonce, key);
-
-    let mut combined = nonce.0.to_vec();
-    combined.extend_from_slice(&ciphertext);
-
-    let encrypted = base64::encode(&combined, base64::Variant::Original);
-    Ok(encrypted)
-}
-
-pub fn decrypt(
-    ciphertext: &str,
-    key: &xchacha20poly1305_ietf::Key,
-) -> Result<String, EncryptionError> {
-    // Initialize sodiumoxide
-    if sodiumoxide::init().is_err() {
-        return Err(EncryptionError {
-            message: "Failed to initialize sodiumoxide".to_string(),
-        });
-    }
-
-    let ciphertext = match base64::decode(ciphertext, base64::Variant::Original) {
-        Ok(ciphertext) => ciphertext,
-        Err(_) => {
-            return Err(EncryptionError {
-                message: "Failed to decode ciphertext".to_string(),
-            })
-        }
-    };
-
-    // Separate the nonce and ciphertext based on known nonce length
-    let nonce_bytes = &ciphertext[..xchacha20poly1305_ietf::NONCEBYTES];
-    let ciphertext = &ciphertext[xchacha20poly1305_ietf::NONCEBYTES..];
-
-    // Convert the nonce bytes back to a Nonce type
-    let nonce = match xchacha20poly1305_ietf::Nonce::from_slice(nonce_bytes) {
-        Some(nonce) => nonce,
-        None => {
-            return Err(EncryptionError {
-                message: "Failed to convert nonce bytes to Nonce type".to_string(),
-            })
-        }
-    };
-
-    // Decrypt the ciphertext
-    let decrypted = match xchacha20poly1305_ietf::open(
-        ciphertext, None, // Assuming no additional data was used during encryption
-        &nonce, key, // Key should be the same as used in encryption
-    ) {
-        Ok(decrypted) => decrypted,
-        Err(_) => {
-            return Err(EncryptionError {
-                message: "Failed to decrypt ciphertext".to_string(),
-            })
-        }
-    };
-
-    Ok(std::str::from_utf8(&decrypted).unwrap().to_string())
-}
-
-pub fn encrypt_file(
     plaintext: &[u8],
     key: &xchacha20poly1305_ietf::Key,
 ) -> Result<Vec<u8>, EncryptionError> {
@@ -116,7 +40,7 @@ pub fn encrypt_file(
     Ok(combined)
 }
 
-pub fn decrypt_file(
+pub fn decrypt(
     ciphertext: &[u8],
     key: &xchacha20poly1305_ietf::Key,
 ) -> Result<Vec<u8>, EncryptionError> {
@@ -155,6 +79,37 @@ pub fn decrypt_file(
     };
 
     Ok(decrypted)
+}
+
+pub fn encrypt_text(
+    message: &str,
+    key: &xchacha20poly1305_ietf::Key,
+) -> Result<String, EncryptionError> {
+    // Your message to encrypt
+    let message = message.as_bytes();
+
+    let combined = encrypt(message, key)?;
+
+    let encrypted = base64::encode(&combined, base64::Variant::Original);
+    Ok(encrypted)
+}
+
+pub fn decrypt_text(
+    ciphertext: &str,
+    key: &xchacha20poly1305_ietf::Key,
+) -> Result<String, EncryptionError> {
+    let ciphertext = match base64::decode(ciphertext, base64::Variant::Original) {
+        Ok(ciphertext) => ciphertext,
+        Err(_) => {
+            return Err(EncryptionError {
+                message: "Failed to decode ciphertext".to_string(),
+            })
+        }
+    };
+
+    let decrypted = decrypt(&ciphertext, key)?;
+
+    Ok(std::str::from_utf8(&decrypted).unwrap().to_string())
 }
 
 pub fn gen_key() -> [u8; xchacha20poly1305_ietf::KEYBYTES] {

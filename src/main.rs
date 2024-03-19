@@ -90,7 +90,7 @@ fn main() {
                 }
             };
 
-            let ciphertext = match encryption::encrypt_file(&plaintext, &key) {
+            let ciphertext = match encryption::encrypt(&plaintext, &key) {
                 Ok(ciphertext) => ciphertext,
                 Err(_) => {
                     eprintln!("Failed to encrypt file");
@@ -134,7 +134,7 @@ fn main() {
                 }
             };
 
-            let plaintext = match encryption::decrypt_file(&ciphertext, &key) {
+            let plaintext = match encryption::decrypt(&ciphertext, &key) {
                 Ok(plaintext) => plaintext,
                 Err(_) => {
                     eprintln!("Failed to decrypt file");
@@ -169,7 +169,7 @@ fn main() {
                 },
             };
 
-            let ciphertext = match encryption::encrypt(&plaintext, &key) {
+            let ciphertext = match encryption::encrypt_text(&plaintext, &key) {
                 Ok(ciphertext) => ciphertext,
                 Err(_) => {
                     eprintln!("Failed to encrypt message");
@@ -195,7 +195,7 @@ fn main() {
                 },
             };
 
-            let plaintext = match encryption::decrypt(&ciphertext, &key) {
+            let plaintext = match encryption::decrypt_text(&ciphertext, &key) {
                 Ok(plaintext) => plaintext,
                 Err(_) => {
                     eprintln!("Failed to decrypt message");
