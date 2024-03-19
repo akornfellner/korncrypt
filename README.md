@@ -2,7 +2,38 @@
 
 KornCrypt is a simple command line encryption and decryption tool using the XChaCha20-Poly1305 algorithm.
 
+## Installation
+
+### From source
+
+You can install KornCrypt from source by cloning the repository and running the following commands:
+
+```
+cargo build --release
+cargo install --path .
+```
+
 ## Usage
+
+```
+korncrypt 0.1.0
+simple encryption tool
+
+USAGE:
+    korncrypt <SUBCOMMAND>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+SUBCOMMANDS:
+    decrypt         Decrypts a file
+    decrypt-text    Decrypts a message
+    encrypt         Ecrypts a file
+    encrypt-text    Encrypts a message
+    generate-key    Generates a new key file The key file is saved to the path specified
+    help            Prints this message or the help of the given subcommand(s)
+```
 
 ### Encrypting files
 
