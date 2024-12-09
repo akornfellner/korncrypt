@@ -41,7 +41,7 @@ SUBCOMMANDS:
 korncrypt encrypt [FLAGS] -k <keyfile> <path_to_file>
 ```
 
-With the flag `-b` the original file will be removed after encryption.
+With the flag `-d` the original file will be removed after encryption.
 
 You can use a password instead of a key file by using the flag `-p` and providing the password as an argument.
 
@@ -65,7 +65,7 @@ This will encrypt the file `file.txt` using the password `password` and create a
 korncrypt decrypt [FLAGS] -k <keyfile> <path_to_file>
 ```
 
-With the flag `-b` the original file will be removed after decryption.
+With the flag `-d` the original file will be removed after decryption.
 
 You can use a password instead of a key file by using the flag `-p` and providing the password as an argument.
 
